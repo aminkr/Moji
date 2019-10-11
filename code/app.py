@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 from models.Users import User
@@ -8,6 +8,7 @@ from config import configs
 from logger import logger
 from utilities import validate_file
 from model_utilities import predict
+
 
 
 # setup the app
@@ -229,7 +230,7 @@ def predict_image():
         pass #TODO return error
 
     if request.path == '/api/predict':
-        return response
+        return jsonify(response)
     else:
         pass  # TODO render template
 

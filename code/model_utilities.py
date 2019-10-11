@@ -1,7 +1,10 @@
 import numpy as np
 import cv2
 from keras.models import load_model
+import tensorflow as tf
 
+global graph
+graph = tf.get_default_graph()
 model = load_model('../trained_model/model_weight.hdf5')
 
 def predict(img_path):
@@ -11,10 +14,13 @@ def predict(img_path):
     """
 
     img = cv2.imread(img_path)
+    print(img_path,np.shape(img))
     img = resize_image(img, (224, 224))
     img = normalize(img)
 
-    result = model.predict(img)
+    result = {}
+    with graph.as_default():
+        result = model.predict(img)
 
     p = result[0]
     p = np.sort(p)
@@ -37,4 +43,6 @@ def normalize(img):
     img = img / 255.0
     return img
 
-
+if __name__ == '__main__':
+    a = predict('./test/img.jpg')
+    print(a)
