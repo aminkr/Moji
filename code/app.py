@@ -220,10 +220,11 @@ def password_check(password):
 @app.route('/api/predict', methods=["POST"])
 @app.route('/predict', methods=["POST"])
 def predict_image():
-
+    response = None
     img_path = validate_file(request)
     if img_path != '':
         response = predict(img_path)
+        logger.info('{}'.format(response))
     else:
         pass #TODO return error
 

@@ -27,7 +27,7 @@ def validate_file(request):
     elif file.filename == '':
         logger.error('filename is empty')
 
-    elif allowed_file(file.filename):
+    elif not allowed_file(file.filename):
         logger.error('invalid file extension')
 
     else:
