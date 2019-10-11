@@ -4,6 +4,11 @@ from flask_login import LoginManager, login_required, login_user, logout_user, c
 from models.Users import User
 from models.Users import db
 import re
+from config import configs
+from logger import logger
+from utilities import validate_file
+from model_utilities import predict
+
 
 # setup the app
 app = Flask(__name__)
@@ -34,7 +39,6 @@ def index():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-
     # clear the inital flash message
     session.clear()
     if request.method == 'GET':
@@ -83,7 +87,7 @@ def register():
 
     # generate error messages if it doesnt pass
     if True in check_password.values():
-        for k,v in check_password.items():
+        for k, v in check_password.items():
             if str(v) is "True":
                 flash(k)
 
@@ -162,6 +166,7 @@ def profile():
 def settings():
     return render_template('settings.html', user=current_user)
 
+
 ####  end routes  ####
 
 
@@ -169,6 +174,7 @@ def settings():
 @login_manager.user_loader
 def load_user(id):
     return User.query.get(int(id))
+
 
 # check password complexity
 def password_check(password):
@@ -198,19 +204,33 @@ def password_check(password):
     lowercase_error = re.search(r"[a-z]", password) is None
 
     # searching for symbols
-    symbol_error = re.search(r"[ !@#$%&'()*+,-./[\\\]^_`{|}~"+r'"]', password) is None
+    symbol_error = re.search(r"[ !@#$%&'()*+,-./[\\\]^_`{|}~" + r'"]', password) is None
 
     ret = {
-        'Password is less than 8 characters' : length_error,
-        'Password does not contain a number' : digit_error,
-        'Password does not contain a uppercase character' : uppercase_error,
-        'Password does not contain a lowercase character' : lowercase_error,
-        'Password does not contain a special character' : symbol_error,
+        'Password is less than 8 characters': length_error,
+        'Password does not contain a number': digit_error,
+        'Password does not contain a uppercase character': uppercase_error,
+        'Password does not contain a lowercase character': lowercase_error,
+        'Password does not contain a special character': symbol_error,
     }
 
     return ret
 
 
+@app.route('/api/predict', methods=["POST"])
+@app.route('/predict', methods=["POST"])
+def predict_image():
+
+    img_path = validate_file(request)
+    if img_path != '':
+        response = predict(img_path)
+    else:
+        pass #TODO return error
+
+    if request.path == '/api/predict':
+        return response
+    else:
+        pass  # TODO render template
+
 if __name__ == "__main__":
-	# change to app.run(host="0.0.0.0"), if you want other machines to be able to reach the webserver.
-	app.run() 
+    app.run(host=configs['host'], port=configs['port'])

@@ -9,3 +9,5 @@ keras
 tensorflow
 pandas
 opencv-python
+colorlog
+requests
