@@ -8,7 +8,8 @@
             <div class="row">
                 <div class="col-lg-12">
                     <h1 class="page-header">
-                        Dashboard <small>Statistics Overview</small>
+                        Dashboard
+                        <small>Statistics Overview</small>
                     </h1>
                     <ol class="breadcrumb">
                         <li class="active">
@@ -23,12 +24,17 @@
                 <div class="col-lg-12">
                     <div class="alert alert-info alert-dismissable">
                         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                        <i class="fa fa-info-circle"></i>  <strong>Like SB Admin?</strong> Try out <a href="http://startbootstrap.com/template-overviews/sb-admin-2" class="alert-link">SB Admin 2</a> for additional features!
+                        <i class="fa fa-info-circle"></i> <strong>Like SB Admin?</strong> Try out <a
+                            href="http://startbootstrap.com/template-overviews/sb-admin-2" class="alert-link">SB Admin
+                        2</a> for additional features!
                     </div>
                 </div>
             </div>
             <!-- /.row -->
             <div class="row">
+                <div id="demo-basic" style="width: 600px;height: 600px">
+                    {#                    <img src="/static/images/img.jpg" class="pic" />#}
+                </div>
                 <form id="FileForm" enctype="multipart/form-data">
                     <dl>
                         <p>
@@ -36,7 +42,7 @@
                         </p>
                     </dl>
                     <p>
-                         <input type="button" name="submit" value="submit" onclick="ProcessImage()" />
+                        <input type="button" name="submit" value="submit" onclick="ProcessImage()"/>
                     </p>
                 </form>
                 <p id="status" hidden>Success!</p>
@@ -289,25 +295,62 @@
     </div>
     <!-- /#page-wrapper -->
 
-<script>
-    function ProcessImage()
-    {
-        var form_data = new FormData($('#FileForm')[0]);
-        console.log(form_data)
-        $.ajax({
-            type: 'POST',
-            url: '/api/predict',
-            data: form_data,
-            contentType: false,
-            cache: false,
-            processData: false,
-            async: false,
-            success: function (data) {
-                console.log(data);
-                $("#status").text(data);
-            },
+    <script>
+        function ProcessImage() {
+            var form_data = new FormData($('#FileForm')[0]);
+            console.log(form_data)
+            $.ajax({
+                type: 'POST',
+                url: '/api/predict',
+                data: form_data,
+                contentType: false,
+                cache: false,
+                processData: false,
+                async: false,
+                success: function (data) {
+                    console.log(data);
+                    $("#status").text(data);
+                },
+            });
+        }
+    </script>
+    <script type="text/javascript">
+        {#    $(document).ready(function(){#}
+        {#            var basic = $('#demo-basic').croppie({#}
+        {#                viewport: {#}
+        {#                    width: 150,#}
+        {#                    height: 200#}
+        {#                }#}
+        {#            });#}
+        {#            basic.croppie('bind', {#}
+        {#                url: '/static/images/img.jpg',#}
+        {#                points: [77, 469, 280, 739]#}
+        {#            });#}
+        {#            //on button click#}
+        {#            basic.croppie('result', 'html').then(function (html) {#}
+        {#                // html is div (overflow hidden)#}
+        {#                // with img positioned inside.#}
+        {#            });#}
+        {#        });#}
+
+        {#    $('.pic').croppie();#}
+
+        {#        document.addEventListener('DOMContentLoaded', function() {#}
+        var basic = $('#demo-basic').croppie({
+            viewport: {
+                width: 150,
+                height: 200
+            }
         });
-    }
-</script>
+        basic.croppie('bind', {
+            url: '/static/images/img.jpg',
+            points: [77,469,280,739]
+        });
+        basic.croppie('result', 'html').then(function(html) {
+            // html is div (overflow hidden)
+            // with img positioned inside.
+        });
+        {#        }, false);#}
+    </script>
 {% endblock %}
 
