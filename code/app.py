@@ -8,6 +8,9 @@ from config import configs
 from logger import logger
 from utilities import validate_file
 from model_utilities import predict
+import numpy as np
+import cv2
+import base64
 
 
 
@@ -222,13 +225,15 @@ def password_check(password):
 @app.route('/predict', methods=["POST"])
 def predict_image():
     response = None
-    img_path = validate_file(request)
-    if img_path != '':
-        response = predict(img_path)
-        logger.info('{}'.format(response))
-    else:
-        pass #TODO return error
 
+    data = request.data
+
+    pos_coma = data.decode("utf-8").find(',')
+    nparr = np.fromstring(base64.b64decode(data[pos_coma:]), np.uint8)
+    img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+
+    response = predict(img)
+    
     if request.path == '/api/predict':
         return jsonify(response)
     else:
