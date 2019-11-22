@@ -336,21 +336,39 @@
         {#    $('.pic').croppie();#}
 
         {#        document.addEventListener('DOMContentLoaded', function() {#}
+        var tmp = 0;
+        var img_loc = '/static/images/img2.jpg';
+        var img = new Image();
+        img.src = img_loc;
+        var w_size = Math.min(img.width,img.height);
+
+
         var basic = $('#demo-basic').croppie({
             viewport: {
-                width: 150,
-                height: 200
-            }
+                width: w_size,
+                height: w_size,
+                type: 'square'
+            },
+            boundary: {
+                width: w_size,
+                height: w_size
+            },
+            enableZoom:false,
+            enforceBoundary: true
         });
         basic.croppie('bind', {
-            url: '/static/images/img.jpg',
-            points: [77,469,280,739]
+
+            url: img_loc,
+            points: [0,0,0,0]
         });
         basic.croppie('result', 'html').then(function(html) {
             // html is div (overflow hidden)
             // with img positioned inside.
         });
         {#        }, false);#}
+
+
+
     </script>
 {% endblock %}
 
