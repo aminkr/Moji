@@ -233,7 +233,7 @@ def predict_image():
     img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
     response = predict(img)
-    
+
     if request.path == '/api/predict':
         return jsonify(response)
     else:

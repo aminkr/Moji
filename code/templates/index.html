@@ -8,10 +8,10 @@
 	  <div class="panel-body">
 
 	  	<div class="row">
-	  		<div class="col-md-4 text-center">
-				<div id="upload-demo" style="width:350px"></div>
-	  		</div>
-	  		<div class="col-md-4" style="padding-top:30px;">
+			<div class="col-md-8 text-center">
+				<div id="upload-demo" style="width:600px;height:600px"></div>
+			</div>
+	  		<div class="col-md-4" style="padding-top:60px;">
 				<strong>Select Image:</strong>
 				<br/>
 				<input type="file" id="upload">
@@ -33,55 +33,6 @@
 <!-- /#page-wrapper -->
 
 <script>
-    function readURL(input)
-    {
-        if (input.files && input.files[0])
-        {
-            var reader = new FileReader();
-            reader.onload = function (e) {
-                $('#img-input')
-                    .attr('src', e.target.result)
-                    .width(600)
-                    .height(600);
-            };
-
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-
-    function ProcessImage()
-    {
-        var form_data = new FormData($('#FileForm')[0]);
-        console.log(form_data)
-        $.ajax({
-            type: 'POST',
-            url: '/api/predict',
-            data: form_data,
-            contentType: false,
-            cache: false,
-            processData: false,
-            async: false,
-            success: function (data) {
-                console.log(data);
-                $("#status").text(data);
-            },
-        });
-    }
-
-
-    $uploadCrop = $('#upload-demo').croppie({
-    enableExif: true,
-    viewport: {
-        width: 200,
-        height: 200,
-        type: 'circle'
-    },
-    boundary: {
-        width: 300,
-        height: 300
-    }
-});
-
 
 $('#upload').on('change', function () {
 	var reader = new FileReader();
@@ -91,9 +42,23 @@ $('#upload').on('change', function () {
     	}).then(function(){
     		console.log('jQuery bind complete');
     	});
-
     }
     reader.readAsDataURL(this.files[0]);
+});
+
+$uploadCrop = $('#upload-demo').croppie({
+    enableExif: true,
+    viewport: {
+        width: 300,
+        height: 300,
+        type: 'square'
+    },
+    boundary: {
+        width: 600 ,
+        height: 600
+    },
+    enableZoom:true,
+    enforceBoundary: true
 });
 
 
@@ -102,7 +67,6 @@ $('.upload-result').on('click', function (ev) {
 		type: 'canvas',
 		size: 'viewport'
 	}).then(function (resp) {
-
          $.ajax({
             type: 'POST',
             url: '/api/predict',
@@ -116,10 +80,8 @@ $('.upload-result').on('click', function (ev) {
                 $("#status").text(resp);
             },
         });
-
 	});
 });
-
 </script>
 
 {% endblock %}
