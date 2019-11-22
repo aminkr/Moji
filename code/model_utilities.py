@@ -7,14 +7,15 @@ global graph
 graph = tf.get_default_graph()
 model = load_model('../trained_model/model_weight.hdf5')
 
-def predict(img_path):
+def predict(image):
     """
     :param img_path: str, path of image
     :return: json, prediction on image
     """
 
-    img = cv2.imread(img_path)
-    print(img_path,np.shape(img))
+    # img = cv2.imread(img_path)
+    img = np.copy(image)
+    print(np.shape(img))
     img = resize_image(img, (224, 224))
     img = normalize(img)
 
