@@ -3,3 +3,4 @@ venv
 *.pyc
 trained_model
 code/uploads/*
+code/database.db
