@@ -1,88 +1,120 @@
 {% extends 'site_template.html' %}
 
 {% block body %}
-<div id="page-wrapper">
-    <div class="container-fluid">
-	<div class="panel panel-default">
-	  <div class="panel-heading">Upload Your Image</div>
-	  <div class="panel-body">
+    <div id="page-wrapper">
+        <div class="container-fluid">
+            <div class="panel panel-default">
+                <div class="panel-heading">Upload Your Image</div>
+                <div class="panel-body">
 
-	  	<div class="row">
-			<div class="col-md-8 text-center">
-				<div id="upload-demo" style="width:600px;height:600px"></div>
-			</div>
-	  		<div class="col-md-4" style="padding-top:60px;">
-				<strong>Select Image:</strong>
-				<br/>
-				<input type="file" id="upload">
-				<br/>
-				<button class="btn btn-success upload-result">Predict Image</button>
-	  		</div>
-<!--	  		<div class="col-md-4" style="">-->
-<!--				<div id="upload-demo-i" style="background:#e1e1e1;width:300px;padding:30px;height:300px;margin-top:30px"></div>-->
-<!--	  		</div>-->
-	  	</div>
+                    <div class="row">
+                        <div class="col-md-8 text-center">
+                            <div id="upload-demo" style="width:600px;height:600px"></div>
+                        </div>
+                        <div class="col-md-4" style="padding-top:60px;">
+                            <strong>Select Image:</strong>
+                            <br/>
+                            <input type="file" id="upload">
+                            <br/>
+                            <button class="btn btn-success upload-result">Predict Image</button>
+                        </div>
+                        <!--	  		<div class="col-md-4" style="">-->
+                        <!--				<div id="upload-demo-i" style="background:#e1e1e1;width:300px;padding:30px;height:300px;margin-top:30px"></div>-->
+                        <!--	  		</div>-->
+                    </div>
 
 
-	  </div>
-</div>
+                </div>
+            </div>
 
+        </div>
+        <!-- /.container-fluid -->
     </div>
-    <!-- /.container-fluid -->
-</div>
-<!-- /#page-wrapper -->
+    <!-- /#page-wrapper -->
 
-<script>
+    <script>
 
-$('#upload').on('change', function () {
-	var reader = new FileReader();
-    reader.onload = function (e) {
-    	$uploadCrop.croppie('bind', {
-    		url: e.target.result
-    	}).then(function(){
-    		console.log('jQuery bind complete');
-    	});
-    }
-    reader.readAsDataURL(this.files[0]);
-});
+        var w_size;
 
-$uploadCrop = $('#upload-demo').croppie({
-    enableExif: true,
-    viewport: {
-        width: 300,
-        height: 300,
-        type: 'square'
-    },
-    boundary: {
-        width: 600 ,
-        height: 600
-    },
-    enableZoom:true,
-    enforceBoundary: true
-});
+        $('#upload').on('change', function () {
+            var reader = new FileReader();
+            reader.onload = function (e) {
 
+                var img = new Image();
+                img.src = e.target.result;
 
-$('.upload-result').on('click', function (ev) {
-	$uploadCrop.croppie('result', {
-		type: 'canvas',
-		size: 'viewport'
-	}).then(function (resp) {
-         $.ajax({
-            type: 'POST',
-            url: '/api/predict',
-            data: resp,
-            dataType: 'json',
-            contentType: false,
-            cache: false,
-            async: false,
-            success: function (resp) {
-                console.log(resp);
-                $("#status").text(resp);
-            },
+                img.onload = function () {
+                    w_size = Math.min(img.width, img.height);
+
+                    if (w_size > 600) {
+                        w_size = 600;
+                    }
+
+                    $uploadCrop.croppie('destroy');
+
+                    $uploadCrop = $('#upload-demo').croppie({
+                        enableExif: true,
+                        viewport: {
+                            width: w_size,
+                            height: w_size,
+                            type: 'square'
+                        },
+                        boundary: {
+                            width: 600,
+                            height: 600
+                        },
+                        enableZoom: true,
+                        enforceBoundary: true
+                    });
+
+                    $uploadCrop.croppie('bind', {
+                        url: e.target.result,
+                        zoom: 0
+                    }).then(function () {
+                        console.log('jQuery bind complete');
+                    });
+                };
+            };
+            reader.readAsDataURL(this.files[0]);
         });
-	});
-});
-</script>
+
+
+        $uploadCrop = $('#upload-demo').croppie({
+            enableExif: true,
+            viewport: {
+                width: 300,
+                height: 300,
+                type: 'square'
+            },
+            boundary: {
+                width: 600,
+                height: 600
+            },
+            enableZoom: true,
+            enforceBoundary: true
+        });
+
+        $('.upload-result').on('click', function (ev) {
+            $uploadCrop.croppie('result', {
+                type: 'canvas',
+                size: 'viewport'
+            }).then(function (resp) {
+                $.ajax({
+                    type: 'POST',
+                    url: '/api/predict',
+                    data: resp,
+                    dataType: 'json',
+                    contentType: false,
+                    cache: false,
+                    async: false,
+                    success: function (resp) {
+                        console.log(resp);
+                        $("#status").text(resp);
+                    },
+                });
+            });
+        });
+    </script>
 
 {% endblock %}
 
