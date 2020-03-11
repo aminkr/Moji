@@ -11,7 +11,12 @@ from model_utilities import predict
 import numpy as np
 import cv2
 import base64
+import paypalrestsdk
 
+paypalrestsdk.configure({
+  "mode": "sandbox", # sandbox or live
+  "client_id": "AfnAfJVtzh_PF6dtM9MWJSuHaXvLbP2QzYuQzE28GXpdFG1F9i2tIUG8MkHhahUkh-mPfYOT8_VjMQ-M",
+  "client_secret": "EGrwwObDHKf9xyOiGyF_G-FfBKvGATJjDW7pC0iRAXuTQUmfEkYdYIh-7mRAyadcZDadCZNhEE_P4D8Q"})
 
 
 # setup the app
@@ -38,6 +43,8 @@ with app.app_context():
 @app.route('/')
 @login_required
 def index():
+    a = 0
+    a = a + 1
     return render_template('index.html', user=current_user)
 
 
@@ -170,6 +177,61 @@ def profile():
 def settings():
     return render_template('settings.html', user=current_user)
 
+@app.route('/paypal')
+def paypal():
+    return render_template('paypal.html', user=current_user)
+
+@app.route('/payment', methods=['POST'])
+def payment():
+    payment = paypalrestsdk.Payment({
+        "intent": "sale",
+        "payer": {
+            "payment_method": "paypal"},
+        "redirect_urls": {
+            "return_url": "http://0.0.0.0:5000/charts",
+            "cancel_url": "http://0.0.0.0:5000/cancel-payment"},
+        "transactions": [{
+            "item_list": {
+                "items": [{
+                    "name": "testitem",
+                    "sku": "12345",
+                    "price": "50.00",
+                    "currency": "USD",
+                    "quantity": 1}]},
+            "amount": {
+                "total": "50.00",
+                "currency": "USD"},
+            "description": "This is the payment transaction description."}]})
+
+    if payment.create():
+        print("Payment created successfully")
+    else:
+        print(payment.error)
+
+    return jsonify({'paymentID': payment.id})
+
+
+@app.route('/execute', methods=['POST'])
+def execute():
+    success = False
+    payment = paypalrestsdk.Payment.find(request.form['paymentID'])
+
+    if payment.execute({'payer_id': request.form['payerID']}):
+        print('execute success')
+        success = True
+    else:
+        print(payment.error)
+    return jsonify({'success': success})
+
+@app.route('/cancel-payment', methods=['POST', 'GET', 'PUT'])
+def cancel_payment():
+    print('cancel payment called')
+    payment = paypalrestsdk.Payment.find(request.form['paymentID'])
+
+    if payment.error:
+        print(f'request has error: {payment.error}')
+    else:
+        print(f'payment {payment}')
 
 ####  end routes  ####
 
@@ -224,7 +286,6 @@ def password_check(password):
 @app.route('/api/predict', methods=["POST"])
 @app.route('/predict', methods=["POST"])
 def predict_image():
-    response = None
 
     data = request.data
 
@@ -238,6 +299,7 @@ def predict_image():
         return jsonify(response)
     else:
         pass  # TODO render template
+
 
 if __name__ == "__main__":
     app.run(host=configs['host'], port=configs['port'])
