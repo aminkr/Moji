@@ -188,18 +188,18 @@ def payment():
         "payer": {
             "payment_method": "paypal"},
         "redirect_urls": {
-            "return_url": "http://0.0.0.0:5000/charts",
-            "cancel_url": "http://0.0.0.0:5000/cancel-payment"},
+            "return_url": configs['payment_return_url'],
+            "cancel_url": configs['payment_cancel_url']},
         "transactions": [{
             "item_list": {
                 "items": [{
-                    "name": "testitem",
+                    "name": "sale",
                     "sku": "12345",
-                    "price": "50.00",
+                    "price": configs['payment_price'],
                     "currency": "USD",
                     "quantity": 1}]},
             "amount": {
-                "total": "50.00",
+                "total": configs['payment_price'],
                 "currency": "USD"},
             "description": "This is the payment transaction description."}]})
 
