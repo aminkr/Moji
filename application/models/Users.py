@@ -1,11 +1,8 @@
-from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from . import db
 
-db = SQLAlchemy()
 
-# define what our database user looks like.
 class User(db.Model):
-
     __tablename__ = "users"
 
     id = db.Column('user_id', db.Integer, primary_key=True)

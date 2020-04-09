@@ -1,6 +1,7 @@
 import sys
 import logging
 import os
+from application.config import FlaskConfig
 
 try:
     import colorlog
@@ -42,5 +43,5 @@ def setup_logging(log_level):
     root.addHandler(ch)
 
 
-setup_logging('info')
+setup_logging(FlaskConfig.LOG_LEVEL)
 logger = logging.getLogger(__name__)

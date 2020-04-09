@@ -5,6 +5,7 @@ import tensorflow as tf
 
 global graph
 graph = tf.get_default_graph()
+
 model = load_model('../trained_model/model_weight.hdf5')
 
 def predict(image):
@@ -45,5 +46,5 @@ def normalize(img):
     return img
 
 if __name__ == '__main__':
-    a = predict('./test/img.jpg')
+    a = predict('./tests/img.jpg')
     print(a)
