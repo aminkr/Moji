@@ -2,6 +2,7 @@ import numpy as np
 import cv2
 from keras.models import load_model
 import tensorflow as tf
+from application.logger import logger
 
 global graph
 graph = tf.get_default_graph()
@@ -16,7 +17,7 @@ def predict(image):
 
     # img = cv2.imread(img_path)
     img = np.copy(image)
-    print(np.shape(img))
+    logger.debug(f"image shape is: {np.shape(img)}")
     img = resize_image(img, (224, 224))
     img = normalize(img)
 
@@ -29,7 +30,6 @@ def predict(image):
     l = max(float(format(p[0], '.2f')), 1)
     h = min(float(format(p[-1], '.2f')), 10)
     m = float(format(p[1], '.2f'))
-    # print("Prediction:" + str(((result[0]))))
 
     return {'Pessimistic': l, 'Optimistic': h, 'real': m}
 
@@ -46,5 +46,5 @@ def normalize(img):
     return img
 
 if __name__ == '__main__':
-    a = predict('./tests/img.jpg')
-    print(a)
+    res = predict('./tests/img.jpg')
+    logger.debug(f"prediction result is: {res}")

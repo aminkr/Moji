@@ -8,6 +8,8 @@ from application.models.Users import User
 from application.models import db
 from application.blueprints import login_manager
 
+from application.logger import logger
+
 auth_bp = Blueprint('auth_bp', __name__,
                     template_folder='../templates',
                     static_folder='../static')
@@ -16,7 +18,9 @@ bcrypt = Bcrypt(auth_app)
 
 @auth_bp.route("/login", methods=["GET", "POST"])
 def login():
-    # clear the inital flash message
+    if current_user.is_authenticated:
+        return redirect(url_for('gen_bp.index'))
+
     session.clear()
     if request.method == 'GET':
         return render_template('login.html')
@@ -38,9 +42,11 @@ def login():
         return render_template('login.html')
 
     # login the user
-    login_user(registered_user, remember=remember_me)
-    print('next is {}'.format(request.args.get('next')))
-    return redirect(request.args.get('next') or url_for('gen_bp.index'))
+    login_status = login_user(registered_user, remember=remember_me)
+    logger.info(f'login status is {login_status} and remember me {remember_me}')
+    if login_status:
+        session.permanent = True
+        return redirect(request.args.get('next') or url_for('gen_bp.index'))
 
 
 @auth_bp.route('/register', methods=["GET", "POST"])
@@ -108,8 +114,13 @@ def logout():
 # required function for loading the right user
 @login_manager.user_loader
 def load_user(id):
-    print('user loader called')
     return User.query.get(int(id))
+
+
+@login_manager.unauthorized_handler
+def unauthorized():
+    flash('You must be logged in to view that page.')
+    return redirect(url_for('auth_bp.login'))
 
 
 # check password complexity

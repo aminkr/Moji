@@ -1,3 +1,5 @@
+import datetime
+
 
 class FlaskConfig:
     # General Config
@@ -20,6 +22,9 @@ class FlaskConfig:
     # API_ACCESS_TOKEN = 'HBV%^&UDFIUGFYGJHVIFUJ'
     # API_CLIENT_ID = '3857463'
 
+    # Session
+    PERMANENT_SESSION_LIFETIME = datetime.timedelta(minutes=1)
+
 
 class PaypalConfig:
     PAYMENT_RETURN_URI = 'http://0.0.0.0:5000/charts'
@@ -30,4 +35,3 @@ class PaypalConfig:
         "client_id": "AfnAfJVtzh_PF6dtM9MWJSuHaXvLbP2QzYuQzE28GXpdFG1F9i2tIUG8MkHhahUkh-mPfYOT8_VjMQ-M",
         "client_secret": "EGrwwObDHKf9xyOiGyF_G-FfBKvGATJjDW7pC0iRAXuTQUmfEkYdYIh-7mRAyadcZDadCZNhEE_P4D8Q"
     }
-
