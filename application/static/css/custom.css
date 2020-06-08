@@ -97,3 +97,19 @@ body {
 	background-color: #1CA347;
 	border-color: #1CA347;
 }
+
+.panel-heading {
+	text-align: center;
+    font-weight: 900;
+}
+
+.prediction-result {
+	padding-top: 2%;
+    padding-left: 4%;
+	font-weight: 900;
+	font-size: initial;
+}
+
+.pred-btn-container{
+	margin-top: 3.5%;
+}

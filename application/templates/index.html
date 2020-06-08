@@ -1,36 +1,45 @@
 {% extends 'site_template.html' %}
 
 {% block body %}
-    <div id="page-wrapper">
-        <div class="container-fluid">
-            <div class="panel panel-default">
-                <div class="panel-heading">Upload Your Image</div>
-                <div class="panel-body">
+<div id="page-wrapper">
+    <div class="container-fluid">
+        <div class="panel panel-default">
+            <div class="panel-heading">Upload Your Image</div>
+            <div class="panel-body">
 
-                    <div class="row">
-                        <div class="col-md-8 text-center">
-                            <div id="upload-demo" style="width:600px;height:600px"></div>
-                        </div>
-                        <div class="col-md-4" style="padding-top:60px;">
-                            <strong>Select Image:</strong>
-                            <br/>
-                            <input type="file" id="upload">
-                            <br/>
-                            <button class="btn btn-success upload-result">Predict Image</button>
-                        </div>
-                        <!--	  		<div class="col-md-4" style="">-->
-                        <!--				<div id="upload-demo-i" style="background:#e1e1e1;width:300px;padding:30px;height:300px;margin-top:30px"></div>-->
-                        <!--	  		</div>-->
+                <div class="row">
+                    <div class="col-md-8 text-center col-md-offset-3">
+                        <div id="upload-demo" style="width:600px;height:600px"></div>
+                    </div>
+                    <div class="col-md-8 col-md-offset-5 pred-btn-container">
+
+                        <input type="file" id="upload" style="display: none;">
+
+                        <button class="btn btn-primary btn-file browse-btn">
+                            Browse
+                        </button>
+
+                        <button class="btn btn-success upload-result">Predict Image</button>
                     </div>
 
+                    <div class="col-md-8 col-md-offset-5 prediction-result">
+
+                        <span class="pessimistic"></span>
+                        <br />
+                        <span class="optimistic"></span>
+                        <br />
+                        <span class="real"></span>
+                    </div>
 
                 </div>
-            </div>
 
+
+            </div>
         </div>
-        <!-- /.container-fluid -->
+
     </div>
-    <!-- /#page-wrapper -->
+    <!-- /.container-fluid -->
+</div>
+<!-- /#page-wrapper -->
 
 {% endblock %}
-

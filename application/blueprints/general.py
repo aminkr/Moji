@@ -1,11 +1,13 @@
-from application.model_utilities import predict
-from flask_login import LoginManager, login_required, login_user, logout_user, current_user
-from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
-import numpy as np
-import base64
-import cv2
-from flask_bcrypt import Bcrypt
 from flask import Blueprint
+from flask_bcrypt import Bcrypt
+import cv2
+import base64
+import numpy as np
+from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
+from flask_login import LoginManager, login_required, login_user, logout_user, current_user
+from application.model_utilities import predict
+import sys
+sys.path.append("./")
 
 gen_bp = Blueprint('gen_bp', __name__,
                    template_folder='../templates',
@@ -18,9 +20,25 @@ def index():
     return render_template('index.html', user=current_user)
 
 
-@gen_bp.route('/charts')
-def charts():
-    return render_template('charts.html', user=current_user)
+@gen_bp.route('/edit-password')
+@login_required
+def edit_password():
+    return render_template('edit-password.html', user=current_user)
+
+
+@gen_bp.route('/reset-password', methods=["POST"])
+@login_required
+def reset_password():
+    current_pass = request.form['current_pass']
+    new_pass = request.form['new_pass']
+    confirm_pass = request.form['conf_pass']
+    
+    # do update password
+    # ...
+    # ...
+    #
+
+    return render_template('index.html', user=current_user)
 
 
 @gen_bp.route('/tables')

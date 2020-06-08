@@ -6,7 +6,7 @@ class FlaskConfig:
     # TESTING = True
     DEBUG = True
     SECRET_KEY = b'_5#y2L"F4Q8z\n\xec]/'
-    SERVER_NAME = "127.0.0.1:5001"
+    SERVER_NAME = "0.0.0.0:5000"
     LOG_LEVEL = 'debug'
     # Database
     SQLALCHEMY_DATABASE_URI = 'sqlite:///models/database.db'

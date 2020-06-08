@@ -7,7 +7,7 @@ from application.logger import logger
 global graph
 graph = tf.get_default_graph()
 
-model = load_model('../trained_model/model_weight.hdf5')
+model = load_model('trained_model/model_weight.hdf5')
 
 def predict(image):
     """
