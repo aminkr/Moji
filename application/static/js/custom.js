@@ -96,12 +96,10 @@ $(document).ready(function () {
         $('#upload').click();
     });
 
-
     $(".reset-pass-btn").click(function () {
         // debugger;
         if ($("input[name=new_pass]").val() != $("input[name=conf_pass]").val()) {
-
-            alert('error');
+            alert('new password and confirm password is not equal.');
             return;
         }
 

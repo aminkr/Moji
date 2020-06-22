@@ -32,13 +32,19 @@ def reset_password():
     current_pass = request.form['current_pass']
     new_pass = request.form['new_pass']
     confirm_pass = request.form['conf_pass']
-    
+
     # do update password
     # ...
     # ...
-    #
+    # ...
 
     return render_template('index.html', user=current_user)
+
+
+@gen_bp.route('/balance', methods=["POST", "GET"])
+@login_required
+def show_user_balance():
+    return render_template('balance.html', user=current_user)
 
 
 @gen_bp.route('/tables')
