@@ -27,9 +27,9 @@ class FlaskConfig:
 
 
 class PaypalConfig:
-    PAYMENT_RETURN_URI = 'http://0.0.0.0:5000/charts'
+    PAYMENT_RETURN_URI = 'http://0.0.0.0:5000/balance'
     PAYMENT_CANCEL_URI = 'http://0.0.0.0:5000/cancel-payment'
-    PAYMENT_PRICE = '50'
+    PAYMENT_PRICE = '5'
     SDK_CONFIG = {
         "mode": "sandbox",  # sandbox or live
         "client_id": "AfnAfJVtzh_PF6dtM9MWJSuHaXvLbP2QzYuQzE28GXpdFG1F9i2tIUG8MkHhahUkh-mPfYOT8_VjMQ-M",

@@ -7,6 +7,8 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 from application.model_utilities import predict
 import sys
+from application.models import db
+from application.models.Account import Account
 sys.path.append("./")
 
 gen_bp = Blueprint('gen_bp', __name__,
@@ -44,6 +46,7 @@ def reset_password():
 @gen_bp.route('/balance', methods=["POST", "GET"])
 @login_required
 def show_user_balance():
+
     return render_template('balance.html', user=current_user)
 
 
