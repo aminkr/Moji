@@ -4,3 +4,4 @@ venv
 trained_model/*
 application/uploads/*
 application/models/database.db
+.vscode/

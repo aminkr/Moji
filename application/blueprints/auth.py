@@ -69,7 +69,7 @@ def register():
     # check if it meets the right complexity
     check_password = password_check(password)
 
-    # generate error messages if it doesnt pass
+    # generate error messages if it doesn't pass
     if True in check_password.values():
         for k, v in check_password.items():
             if str(v) is "True":
@@ -151,7 +151,8 @@ def password_check(password):
     lowercase_error = re.search(r"[a-z]", password) is None
 
     # searching for symbols
-    symbol_error = re.search(r"[ !@#$%&'()*+,-./[\\\]^_`{|}~" + r'"]', password) is None
+    symbol_error = re.search(
+        r"[ !@#$%&'()*+,-./[\\\]^_`{|}~" + r'"]', password) is None
 
     ret = {
         'Password is less than 8 characters': length_error,

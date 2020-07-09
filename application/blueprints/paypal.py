@@ -5,6 +5,7 @@ from flask_login import LoginManager, login_required, login_user, logout_user, c
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 
 from application.logger import logger
+# from 
 
 paypalrestsdk.configure(PaypalConfig.SDK_CONFIG)
 
@@ -15,11 +16,13 @@ pay_bp = Blueprint('pay_bp', __name__,
 
 @pay_bp.route('/paypal')
 def paypal():
+    print('test')
     return render_template('paypal.html', user=current_user)
 
 
 @pay_bp.route('/payment', methods=['POST'])
 def payment():
+    print('test')
     payment = paypalrestsdk.Payment({
         "intent": "sale",
         "payer": {
