@@ -8,7 +8,6 @@ from flask_login import LoginManager, login_required, login_user, logout_user, c
 from application.model_utilities import predict
 import sys
 from application.models import db
-from application.models.Account import Account
 sys.path.append("./")
 
 gen_bp = Blueprint('gen_bp', __name__,

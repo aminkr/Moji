@@ -3,7 +3,6 @@ from flask import Flask
 from application.models import db
 from application.models.Users import User
 from application.models.Payments import Payment
-from application.models.Account import Account
 from application.blueprints import login_manager
 
 
