@@ -1,21 +1,34 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from . import db
+from application.models.Payments import Payment
 
 
 class User(db.Model):
-    __tablename__ = "users"
-
-    id = db.Column('user_id', db.Integer, primary_key=True)
-    username = db.Column('username', db.String(20), unique=True, index=True)
-    password = db.Column('password', db.String(255))
-    email = db.Column('email', db.String(60), unique=True, index=True)
-    registered_on = db.Column('registered_on', db.DateTime)
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(20), unique=True, index=True)
+    password = db.Column(db.String(255))
+    email = db.Column(db.String(60), unique=True, index=True)
+    registered_on = db.Column(db.DateTime)
 
     def __init__(self, username, password, email):
         self.username = username
         self.password = password
         self.email = email
-        self.registered_on = datetime.utcnow()
+        self.registered_on = datetime.now()
+
+    def has_credit(self):
+        # TODO changed number of days
+        has_credit = False
+        last_payment = Payment.query.filter_by(user_id=self.id).order_by(Payment.id.desc()).first()
+        if last_payment.payed_on + timedelta(days=30) >= datetime.now():
+            has_credit = True
+
+        return has_credit
+
+    def get_last_paymets(self):
+        # TODO changed limit
+        last_payments = Payment.query.filter_by(user_id=self.id).order_by(Payment.id.desc()).limit(10).all()
+        return last_payments
 
     def is_authenticated(self):
         return True
@@ -30,7 +43,7 @@ class User(db.Model):
         return self.id
 
     def __repr__(self):
-        return '<User %r>' % (self.username)
+        return f'User: {self.username}'
 
     # don't judge me...
     def unique(self):
