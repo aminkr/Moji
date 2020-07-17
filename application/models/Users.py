@@ -20,6 +20,9 @@ class User(db.Model):
         # TODO changed number of days
         has_credit = False
         last_payment = Payment.query.filter_by(user_id=self.id).order_by(Payment.id.desc()).first()
+
+        if last_payment is None:
+            return has_credit
         if last_payment.payed_on + timedelta(days=30) >= datetime.now():
             has_credit = True
 
@@ -28,6 +31,11 @@ class User(db.Model):
     def get_last_paymets(self):
         # TODO changed limit
         last_payments = Payment.query.filter_by(user_id=self.id).order_by(Payment.id.desc()).limit(10).all()
+        return last_payments
+
+    def get_last_paymet(self):
+        # TODO changed limit
+        last_payments = Payment.query.filter_by(user_id=self.id).order_by(Payment.id.desc()).limit(1).first()
         return last_payments
 
     def is_authenticated(self):

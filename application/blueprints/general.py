@@ -7,7 +7,9 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 from application.model_utilities import predict
 import sys
-from application.models import db
+from application.models.Users import User
+from datetime import timedelta
+from application.config import PaypalConfig
 sys.path.append("./")
 
 gen_bp = Blueprint('gen_bp', __name__,
@@ -27,26 +29,16 @@ def edit_password():
     return render_template('edit-password.html', user=current_user)
 
 
-@gen_bp.route('/reset-password', methods=["POST"])
-@login_required
-def reset_password():
-    current_pass = request.form['current_pass']
-    new_pass = request.form['new_pass']
-    confirm_pass = request.form['conf_pass']
-
-    # do update password
-    # ...
-    # ...
-    # ...
-
-    return render_template('index.html', user=current_user)
-
-
 @gen_bp.route('/balance', methods=["POST", "GET"])
 @login_required
 def show_user_balance():
+    user = User.query.filter_by(username=current_user.username).first()
+    payments = user.get_last_paymets()
 
-    return render_template('balance.html', user=current_user)
+    for i in range(len(payments)):
+        payments[i].end_date = payments[i].payed_on.date() + timedelta(days=PaypalConfig.PAYMENT_EXPIRE_TIME)
+
+    return render_template('balance.html', user=current_user, payments=payments)
 
 
 @gen_bp.route('/tables')
@@ -87,6 +79,14 @@ def settings():
 @gen_bp.route('/api/predict', methods=["POST"])
 @gen_bp.route('/predict', methods=["POST"])
 def predict_image():
+    # check input image size and type
+
+    user = User.query.filter_by(username=current_user.username).first()
+    if not user.has_credit():
+        return jsonify({
+            'error': 'You have not credit to prediction.'
+        })
+
     data = request.data
 
     pos_coma = data.decode("utf-8").find(',')

@@ -2,7 +2,9 @@ from flask_login import LoginManager, login_required, login_user, logout_user, c
 from flask import Flask, render_template, request, redirect, url_for, flash, session, Blueprint
 from flask_bcrypt import Bcrypt
 from flask import current_app as auth_app
+from flask import jsonify
 import re
+import numpy as np
 
 from application.models.Users import User
 from application.models import db
@@ -43,10 +45,48 @@ def login():
 
     # login the user
     login_status = login_user(registered_user, remember=remember_me)
-    logger.info(f'login status is {login_status} and remember me {remember_me}')
+    logger.info(
+        f'login status is {login_status} and remember me {remember_me}')
     if login_status:
         session.permanent = True
         return redirect(request.args.get('next') or url_for('gen_bp.index'))
+
+
+@auth_bp.route('/reset-password', methods=["POST"])
+@login_required
+def reset_password():
+    response = ''
+    current_pass = request.form['current_pass']
+    new_pass = request.form['new_pass']
+    confirm_pass = request.form['conf_pass']
+
+    # check if it meets the right complexity
+    check_password = password_check(new_pass)
+
+    idx = np.where(np.array(list(check_password.values())) == True)
+
+    msg_error = np.array(list(check_password.keys()))
+    msg_error = msg_error[idx]
+
+    if (len(msg_error) > 0):
+        response = msg_error[0]
+
+    # check previous pass is equal with previous pass
+    registered_user = User.query.filter_by(
+        username=current_user.username).first()
+    if bcrypt.check_password_hash(registered_user.password, current_pass) == False:
+        response = 'current password is not correct'
+    print(response)
+    if (response != ''):
+        return render_template('edit-password.html', user=current_user, message=response, color='red')
+
+    # do update password
+    pw_hash = bcrypt.generate_password_hash(new_pass)
+
+    registered_user.password = pw_hash
+    db.session.commit()
+
+    return render_template('edit-password.html', user=current_user, message='Password updated.', color='green')
 
 
 @auth_bp.route('/register', methods=["GET", "POST"])

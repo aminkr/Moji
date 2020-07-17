@@ -15,8 +15,6 @@ def predict(image):
     :param img_path: str, path of image
     :return: json, prediction on image
     """
-
-    # img = cv2.imread(img_path)
     img = np.copy(image)
     logger.debug(f"image shape is: {np.shape(img)}")
     img = resize_image(img, (224, 224))

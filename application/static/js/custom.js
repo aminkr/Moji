@@ -81,7 +81,10 @@ $(document).ready(function () {
                 cache: false,
                 async: false,
                 success: function (resp) {
-                    console.log(resp);
+                    if (resp['error'] != undefined){
+                        alert(resp['error']);
+                        return;
+                    }
                     $('.optimistic').text('Optimistic: ' + resp['Optimistic']);
                     $('.pessimistic').text('Pessimistic: ' + resp['Pessimistic']);
                     $('.real').text('Real: ' + resp['real']);

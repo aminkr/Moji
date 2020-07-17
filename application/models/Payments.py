@@ -3,11 +3,11 @@ from . import db
 
 
 class Payment(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True,  autoincrement=True)
     amount = db.Column(db.Float, nullable=False)
     payed_on = db.Column(db.DateTime)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'),
-                        nullable=False)
+    user_id = db.Column(db.String(20), db.ForeignKey('user.id'),
+                         nullable=False)
     user = db.relationship('User', foreign_keys=user_id)
 
     def __init__(self, amount, user):
@@ -16,4 +16,4 @@ class Payment(db.Model):
         self.payed_on = datetime.now()
 
     def __repr__(self):
-        return f'Payment {self.id}, {self.amount}'
+        return f'id: {self.id}, amount: {self.user_id}, amount: {self.amount}, payed_on: {self.payed_on}'
