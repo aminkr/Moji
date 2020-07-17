@@ -99,6 +99,26 @@ $(document).ready(function () {
         $('#upload').click();
     });
 
+    $(".create-pdf").click(function () {
+
+        const filename  = 'report.pdf';
+
+        html2canvas(document.querySelector('#nodeToRenderAsPDF')).then(canvas => {
+            // debugger;
+			let pdf = new jsPDF('p', 'mm', 'a4');
+			pdf.addImage(canvas.toDataURL('image/png'), 'PNG',-60, -30, 300, 170);
+
+			var offset = 150;
+			pdf.text($('.pessimistic').text(), 50, offset, 'left');
+			pdf.text($('.optimistic').text(), 50, offset + 10, 'left');
+			pdf.text($('.real').text(), 50, offset + 20, 'left');
+			pdf.save(filename);
+		});
+
+    });
+
+
+
     $(".reset-pass-btn").click(function () {
         // debugger;
         if ($("input[name=new_pass]").val() != $("input[name=conf_pass]").val()) {
