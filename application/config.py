@@ -25,6 +25,9 @@ class FlaskConfig:
     # Session
     PERMANENT_SESSION_LIFETIME = datetime.timedelta(minutes=1)
 
+    # Admin
+    FLASK_ADMIN_SWATCH = 'cerulean'
+
 
 class PaypalConfig:
     PAYMENT_RETURN_URI = 'http://0.0.0.0:5000/balance'

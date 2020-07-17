@@ -78,6 +78,7 @@ def settings():
 
 @gen_bp.route('/api/predict', methods=["POST"])
 @gen_bp.route('/predict', methods=["POST"])
+@login_required
 def predict_image():
     # check input image size and type
 

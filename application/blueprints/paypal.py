@@ -21,8 +21,6 @@ pay_bp = Blueprint('pay_bp', __name__,
 @pay_bp.route('/paypal')
 @login_required
 def paypal():
-
-
     user = User.query.filter_by(username=current_user.username).first()
     pay = Payment(PaypalConfig.PAYMENT_PRICE, user)
     db.session.add(pay)
