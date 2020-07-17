@@ -9,12 +9,14 @@ class User(db.Model):
     password = db.Column(db.String(255))
     email = db.Column(db.String(60), unique=True, index=True)
     registered_on = db.Column(db.DateTime)
+    is_admin = db.Column(db.Boolean, unique=False, default=False)
 
-    def __init__(self, username, password, email):
+    def __init__(self, username, password, email, is_admin=False):
         self.username = username
         self.password = password
         self.email = email
         self.registered_on = datetime.now()
+        self.is_admin = is_admin
 
     def has_credit(self):
         # TODO changed number of days
